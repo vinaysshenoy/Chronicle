@@ -1,3 +1,4 @@
-rootProject.name = 'chronicle'
-rootProject.name = 'chronicle'
+rootProject.name = 'Chronicle'
+include 'core'
+include 'sample-java'
 

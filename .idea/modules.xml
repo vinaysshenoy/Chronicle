@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chronicle.iml" filepath="$PROJECT_DIR$/.idea/modules/chronicle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Chronicle.iml" filepath="$PROJECT_DIR$/.idea/modules/Chronicle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core.iml" filepath="$PROJECT_DIR$/.idea/modules/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample-java.iml" filepath="$PROJECT_DIR$/.idea/modules/sample-java.iml" />
     </modules>
   </component>
 </project>
