@@ -1,5 +1,5 @@
 package com.vinaysshenoy.chronicle
 
-class Watch {
+class Watch @JvmOverloads constructor(val name: String = "") {
 
 }
