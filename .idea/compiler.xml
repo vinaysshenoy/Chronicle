@@ -12,6 +12,7 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <bytecodeTargetLevel>
+      <module name="Chronicle" target="1.7" />
       <module name="chronicle" target="1.7" />
       <module name="core" target="1.7" />
     </bytecodeTargetLevel>

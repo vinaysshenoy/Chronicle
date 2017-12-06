@@ -1,6 +1,6 @@
 package com.vinaysshenoy.chronicle.expr
 
-interface Expression<in T: Any> {
+interface Expression {
 
-  fun evaluate(test: T): Boolean
+  fun evaluate(test: Long): Boolean
 }
