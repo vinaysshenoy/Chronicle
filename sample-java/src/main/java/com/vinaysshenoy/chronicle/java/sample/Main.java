@@ -1,15 +1,13 @@
 package com.vinaysshenoy.chronicle.java.sample;
 
 import com.vinaysshenoy.chronicle.Chronicle;
-import com.vinaysshenoy.chronicle.EventRecord;
-import com.vinaysshenoy.chronicle.Store;
 import com.vinaysshenoy.chronicle.Watcher;
 import com.vinaysshenoy.chronicle.expr.GreaterThanOrEqualTo;
+import com.vinaysshenoy.chronicle.expr.LesserThan;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class Main {
 
@@ -17,27 +15,8 @@ public class Main {
 
   private final Chronicle chronicle;
 
-  private final Store store = new Store() {
-    @Override public void put(@NotNull EventRecord eventRecord) throws IOException {
-
-    }
-
-    @Override public long countOf(@NotNull String event) throws IOException {
-      return 0;
-    }
-
-    @Override public long countOfSince(@NotNull String event, long eventTimeMillis)
-        throws IOException {
-      return 0;
-    }
-
-    @Nullable @Override public EventRecord latestOf(@NotNull String event) throws IOException {
-      return null;
-    }
-  };
-
   private Main() {
-    chronicle = new Chronicle(store);
+    chronicle = new Chronicle(new ListBasedStore());
   }
 
   private void run() {
@@ -52,7 +31,33 @@ public class Main {
                 .timesDone("event_3", new GreaterThanOrEqualTo(5))
                 .build()
         )
+        .or(
+            chronicle
+                .query("query_2")
+                .hasDone("event_4")
+                .timesDone("event_5", new LesserThan(3))
+                .build()
+        )
         .then(watchName -> LOGGER.info(String.format(Locale.US, "Triggered watch: %s", watchName)));
+
+    new Thread(() ->
+        Arrays.asList(
+            "event_2", "event_2",
+            "event_3", "event_3", "event_3",
+            "event_5", "event_3", "event_2",
+            "event_3", "event_5", "event_4",
+            "event_1"
+
+        ).forEach(event -> {
+          LOGGER.info("Event: " + event);
+          try {
+            chronicle.did(event);
+            Thread.sleep(500L);
+          } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+          }
+        })
+    ).start();
   }
 
   public static void main(String[] args) {
