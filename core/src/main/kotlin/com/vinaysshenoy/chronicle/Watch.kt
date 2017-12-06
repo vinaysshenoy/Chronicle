@@ -5,10 +5,11 @@ import com.vinaysshenoy.chronicle.expr.Expression
 import com.vinaysshenoy.chronicle.expr.GreaterThanOrEqualTo
 import com.vinaysshenoy.chronicle.expr.LesserThanOrEqualTo
 
-class Watch private constructor(private val store: Store, val name: String = "") {
+class Watch private constructor(private val chronicle: Chronicle, val name: String = "") {
 
 
-  class Builder internal constructor(private val store: Store, private val name: String = "") {
+
+  class Builder internal constructor(private val chronicle: Chronicle, private val name: String = "") {
 
     fun timesDone(event: String, count: Long) = timesDone(event, Equal(count))
 
@@ -30,6 +31,6 @@ class Watch private constructor(private val store: Store, val name: String = "")
       return this
     }
 
-    fun build() = Watch(store, name)
+    fun build() = Watch(chronicle, name)
   }
 }
