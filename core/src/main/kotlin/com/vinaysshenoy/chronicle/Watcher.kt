@@ -7,7 +7,11 @@ interface Listener {
 
 class Watcher private constructor(private val watches: List<Watch>, private val listener: Listener) {
 
-  class Builder(watch: Watch) {
+  fun stopWatching() {
+
+  }
+
+  class Builder internal constructor(watch: Watch) {
 
     private val watches = mutableListOf<Watch>()
 

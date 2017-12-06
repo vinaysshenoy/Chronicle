@@ -8,7 +8,7 @@ import com.vinaysshenoy.chronicle.expr.LesserThanOrEqualTo
 class Watch private constructor(private val store: Store, val name: String = "") {
 
 
-  class Builder(private val store: Store, private val name: String = "") {
+  class Builder internal constructor(private val store: Store, private val name: String = "") {
 
     fun timesDone(event: String, count: Long) = timesDone(event, Equal(count))
 
