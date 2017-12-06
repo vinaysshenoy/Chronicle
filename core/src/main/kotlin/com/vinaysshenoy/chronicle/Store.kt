@@ -16,4 +16,6 @@ interface Store {
   @Throws(IOException::class)
   fun latestOf(event: String): EventRecord?
 
+  @Throws(IOException::class)
+  fun clear()
 }
