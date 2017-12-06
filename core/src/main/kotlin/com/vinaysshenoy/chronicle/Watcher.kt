@@ -7,9 +7,17 @@ interface Listener {
 
 class Watcher private constructor(private val watches: List<Watch>, private val listener: Listener) {
 
-  fun stopWatching() {
+  private val evaluationListener = { watchName: String -> listener.onWatchTriggered(watchName) }
 
+  init {
+    watches.forEach { it.addEvaluationListener(evaluationListener) }
   }
+
+  fun stopWatching() {
+    watches.forEach { it.stop() }
+  }
+
+  fun evaluate() = watches.forEach { it.evaluate() }
 
   class Builder internal constructor(watch: Watch) {
 

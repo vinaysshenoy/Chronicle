@@ -24,6 +24,7 @@ class Watch private constructor(private val chronicle: Chronicle, private val op
         .fold(true, { accumulator, operation ->
           when (accumulator) {
             true -> accumulator.and(operation.run())
+            //If the previous operation failed, no need to evaluate the rest
             false -> false
           }
         })
