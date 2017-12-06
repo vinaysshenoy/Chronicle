@@ -11,6 +11,45 @@ import com.vinaysshenoy.chronicle.operation.TimesDoneSince
 
 class Watch private constructor(private val chronicle: Chronicle, private val operations: List<Operation>, val name: String = "") {
 
+  private val chronicleListener = { _: String, _: Long -> evaluate() }
+
+  private var evaluationListeners = emptyList<(String) -> Unit>()
+
+  init {
+    chronicle.addEventListener(chronicleListener)
+  }
+
+  fun evaluate() {
+    operations
+        .fold(true, { accumulator, operation ->
+          when (accumulator) {
+            true -> accumulator.and(operation.run())
+            false -> false
+          }
+        })
+        .let {
+          if (it) {
+            dispatchEvaluationSuccessful()
+          }
+        }
+  }
+
+  fun addEvaluationListener(listener: (String) -> Unit) {
+    evaluationListeners += listener
+  }
+
+  fun removeEvaluationListener(listener: (String) -> Unit) {
+    evaluationListeners -= listener
+  }
+
+  fun stop() {
+    evaluationListeners = emptyList()
+    chronicle.removeEventListener(chronicleListener)
+  }
+
+  private fun dispatchEvaluationSuccessful() {
+    evaluationListeners.forEach { it(name) }
+  }
 
   class Builder internal constructor(private val chronicle: Chronicle, private val name: String = "") {
 
