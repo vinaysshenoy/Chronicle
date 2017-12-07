@@ -1,29 +1,30 @@
-group 'com.vinaysshenoy'
-version '0.0.1'
+//group 'com.vinaysshenoy'
+//version '0.0.1'
 
 buildscript {
+  ext.core_lib_version = '0.0.1'
   ext.kotlin_version = '1.2.0'
+  ext.junit_gradle_plugin_version = '1.0.0'
+  ext.spek_version = '1.1.5'
+  ext.kluent_version = '1.31'
 
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
 
-apply plugin: 'java'
-apply plugin: 'kotlin'
-
-sourceCompatibility = 1.7
-
 repositories {
   jcenter()
 }
 
-dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-  testCompile group: 'junit', name: 'junit', version: '4.12'
+allprojects {
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
 }
 
 task wrapper(type: Wrapper) {
