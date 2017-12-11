@@ -8,8 +8,12 @@ import com.vinaysshenoy.chronicle.operation.Operation
 import com.vinaysshenoy.chronicle.operation.TimeSinceLastOccurrence
 import com.vinaysshenoy.chronicle.operation.TimesDone
 import com.vinaysshenoy.chronicle.operation.TimesDoneSince
+import java.util.concurrent.Executor
+import java.util.logging.Logger
 
-class Watch private constructor(private val chronicle: Chronicle, private val operations: List<Operation>, val name: String = "") {
+private val logger = Logger.getLogger("Watch")
+
+class Watch private constructor(private val chronicle: Chronicle, private val executor: Executor, private val operations: List<Operation>, private val name: String = "") {
 
   private val chronicleListener = { _: String, _: Long -> evaluate() }
 
@@ -20,19 +24,23 @@ class Watch private constructor(private val chronicle: Chronicle, private val op
   }
 
   fun evaluate() {
-    operations
-        .fold(true, { accumulator, operation ->
-          when (accumulator) {
-            true -> accumulator.and(operation.run())
+
+    executor.execute {
+      logger.info("Evaluate operations on ${Thread.currentThread().name} for watch: $name")
+      operations
+          .fold(true, { accumulator, operation ->
+            when (accumulator) {
+              true -> accumulator.and(operation.run())
             //If the previous operation failed, no need to evaluate the rest
-            false -> false
+              false -> false
+            }
+          })
+          .let {
+            if (it) {
+              dispatchEvaluationSuccessful()
+            }
           }
-        })
-        .let {
-          if (it) {
-            dispatchEvaluationSuccessful()
-          }
-        }
+    }
   }
 
   fun addEvaluationListener(listener: (String) -> Unit) {
@@ -52,7 +60,7 @@ class Watch private constructor(private val chronicle: Chronicle, private val op
     evaluationListeners.forEach { it(name) }
   }
 
-  class Builder internal constructor(private val chronicle: Chronicle, private val name: String = "") {
+  class Builder internal constructor(private val chronicle: Chronicle, private val executor: Executor, private val name: String = "") {
 
     private val operations = mutableListOf<Operation>()
 
@@ -79,6 +87,6 @@ class Watch private constructor(private val chronicle: Chronicle, private val op
       return this
     }
 
-    fun build() = Watch(chronicle, operations.toList(), name)
+    fun build() = Watch(chronicle, executor, operations.toList(), name)
   }
 }

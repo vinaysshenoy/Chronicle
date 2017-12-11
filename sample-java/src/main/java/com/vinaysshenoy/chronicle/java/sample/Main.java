@@ -49,7 +49,7 @@ public class Main {
             "event_1"
 
         ).forEach(event -> {
-          LOGGER.info("Event: " + event);
+          LOGGER.info("Event: " + event + ", on thread: " + Thread.currentThread().getName());
           try {
             chronicle.did(event);
             Thread.sleep(500L);
