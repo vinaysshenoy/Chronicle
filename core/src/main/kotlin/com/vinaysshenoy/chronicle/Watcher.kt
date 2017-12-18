@@ -13,11 +13,13 @@ class Watcher private constructor(private val watches: List<Watch>, private val 
     watches.forEach { it.addEvaluationListener(evaluationListener) }
   }
 
+  fun startWatching() {
+    watches.forEach { it.start() }
+  }
+
   fun stopWatching() {
     watches.forEach { it.stop() }
   }
-
-  fun evaluate() = watches.forEach { it.evaluate() }
 
   class Builder internal constructor(watch: Watch) {
 

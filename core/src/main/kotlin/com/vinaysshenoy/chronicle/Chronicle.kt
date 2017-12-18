@@ -5,7 +5,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.logging.Logger
 
 private class ChronicleThreadFactory(val threadPrefix: String) : ThreadFactory {
 
@@ -14,8 +13,6 @@ private class ChronicleThreadFactory(val threadPrefix: String) : ThreadFactory {
   override fun newThread(r: Runnable) = Thread(r, threadPrefix + "-thread-${threadNumber.getAndIncrement()}")
 
 }
-
-private val logger = Logger.getLogger("Chronicle")
 
 class Chronicle @JvmOverloads constructor(
     val store: Store,
@@ -29,7 +26,6 @@ class Chronicle @JvmOverloads constructor(
   fun did(event: String, eventTimeMillis: Long = System.currentTimeMillis()) {
 
     writeExecutor.submit {
-      logger.info("Writing to store on ${Thread.currentThread().name}")
       store.put(EventRecord(event, eventTimeMillis))
       dispatchListeners(event, eventTimeMillis)
     }

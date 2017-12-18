@@ -40,6 +40,8 @@ public class Main {
         )
         .then(watchName -> LOGGER.info(String.format(Locale.US, "Triggered watch: %s", watchName)));
 
+    watcher.startWatching();
+
     new Thread(() ->
         Arrays.asList(
             "event_2", "event_2",

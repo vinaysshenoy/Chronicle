@@ -9,9 +9,7 @@ import com.vinaysshenoy.chronicle.operation.TimeSinceLastOccurrence
 import com.vinaysshenoy.chronicle.operation.TimesDone
 import com.vinaysshenoy.chronicle.operation.TimesDoneSince
 import java.util.concurrent.Executor
-import java.util.logging.Logger
 
-private val logger = Logger.getLogger("Watch")
 
 class Watch private constructor(private val chronicle: Chronicle, private val executor: Executor, private val operations: List<Operation>, private val name: String = "") {
 
@@ -19,14 +17,9 @@ class Watch private constructor(private val chronicle: Chronicle, private val ex
 
   private var evaluationListeners = emptyList<(String) -> Unit>()
 
-  init {
-    chronicle.addEventListener(chronicleListener)
-  }
-
-  fun evaluate() {
+  private fun evaluate() {
 
     executor.execute {
-      logger.info("Evaluate operations on ${Thread.currentThread().name} for watch: $name")
       operations
           .fold(true, { accumulator, operation ->
             when (accumulator) {
@@ -51,8 +44,11 @@ class Watch private constructor(private val chronicle: Chronicle, private val ex
     evaluationListeners -= listener
   }
 
+  fun start() {
+    chronicle.addEventListener(chronicleListener)
+  }
+
   fun stop() {
-    evaluationListeners = emptyList()
     chronicle.removeEventListener(chronicleListener)
   }
 
