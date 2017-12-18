@@ -3,7 +3,7 @@
 
 buildscript {
   ext.core_lib_version = '0.0.1'
-  ext.kotlin_version = '1.2.0'
+  ext.kotlin_version = '1.2.10'
   ext.junit_gradle_plugin_version = '1.0.0'
   ext.spek_version = '1.1.5'
   ext.kluent_version = '1.31'
